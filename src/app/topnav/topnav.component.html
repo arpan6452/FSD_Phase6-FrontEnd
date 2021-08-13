@@ -1,0 +1,185 @@
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>PharmaFast</h1>
+  <p>Fastest Pharmacy at your doorstep!!</p>
+</div>
+<nav class="custom-border mb-2 navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #3f51b5 !important;box-shadow: 0px 0px 1px 1.5px #ddd;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">PFast</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="menuPage">Home</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" aria-current="page" routerLink="menuPage">Menu</a>
+        </li> -->
+        <li *ngIf="isAdmin == 'ROLE_ADMIN'" class="nav-item">
+          <a class="nav-link" aria-current="page" routerLink="adminPage">Admin</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav justify-content-end">
+        <li *ngIf="isUserPrsent == false" class="nav-item sign-in">
+          <a class="nav-link" data-bs-toggle="modal" data-bs-target="#signInModal">Sign In</a>
+        </li>
+        <li *ngIf="isUserPrsent == false" class="nav-item sign-up">
+          <a class="nav-link" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign Up</a>
+        </li>
+        <li *ngIf="isUserPrsent == true" class="nav-item sign-in">
+          <a class="nav-link active" >Hi, {{username}}</a>
+        </li>
+        <li *ngIf="isUserPrsent == true" class="nav-item sign-in">
+          <a class="nav-link" (click) = "logout()" >Logout</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sign In</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" #closeSignInModal aria-label="Close"></button>
+      </div>
+      <form #signInForm="ngForm" novalidate>
+        <div class="modal-body">
+          <!-- <div class="m-2 form-group">
+            <label for="emailId" class="form-label">Select your profile</label>
+            <input class="form-control" id="role" name="role" [(ngModel)]="user.role" #role="ngModel" type="text" placeholder="Select a role" required>
+            <small *ngIf="hasError(role)" [class]="hasError(role) ? 'has-error' :''">
+              <div *ngIf="role.errors">
+                  <span *ngIf="role.errors.required">EmailId is a required field</span>
+              </div>
+            </small>
+          </div> -->
+          <div class="m-2 form-group">
+            <label for="emailId" class="form-label">Enter your Email</label>
+            <input class="form-control" id="emailId" name="emailId" [(ngModel)]="user.emailId" #emailId="ngModel" type="email" placeholder="Enter your email" required>
+            <small *ngIf="hasError(emailId)" [class]="hasError(emailId) ? 'has-error' :''">
+              <div *ngIf="emailId.errors">
+                  <span *ngIf="emailId.errors.required">EmailId is a required field</span>
+              </div>
+            </small>
+          </div>
+          <div class="m-2 form-group">
+            <label for="password" class="form-label">Enter your Password</label>
+            <input class="form-control" id="password" name="password" [(ngModel)]="user.password" #password="ngModel" type="password" placeholder="Enter your password" required>
+            <small *ngIf="hasError(password)" [class]="hasError(password) ? 'has-error' :''">
+              <div *ngIf="password.errors">
+                  <span *ngIf="password.errors.required">Password is a required field</span>
+              </div>
+            </small>
+            <small p-2 style="color: red;" *ngIf="isCorrectCredentials">Incorrect Credetials!!</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-dark w-100" [(disabled)] = "!signInForm.valid" type="submit" (click)="signIn(signInForm)">Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sign Up</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" #closeSignUpModal aria-label="Close" ></button>
+      </div>
+      <form [formGroup]="signUpForm" (ngSubmit)="register()">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label for="role" class="form-label">Role</label>
+              <select class="form-select" id="role" style="cursor: pointer;" name="role" formControlName="role">
+                <option selected value="admin">Admin</option>
+                <option selected value="user">User</option>
+              </select>
+              <!-- <input type="text" class="form-control" id="role" name="role" formControlName="role"> -->
+              <small *ngIf="hasErrorRegistration('role')" [class] = "hasErrorRegistration('role') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.role.errors">
+                  <span *ngIf="f_Registration.role.errors.required">Role is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-md-6">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" formControlName="email">
+              <small *ngIf="hasErrorRegistration('email')" [class] = "hasErrorRegistration('email') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.email.errors">
+                  <span *ngIf="f_Registration.email.errors.required">Email is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-md-6">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" formControlName="password">
+              <small *ngIf="hasErrorRegistration('password')" [class] = "hasErrorRegistration('password') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.password.errors">
+                  <span *ngIf="f_Registration.password.errors.required">Password is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-12">
+              <label for="address" class="form-label">Address</label>
+              <input type="text" class="form-control" id="address1" name="address1" formControlName="address1" placeholder="1234 Main St">
+              <small *ngIf="hasErrorRegistration('address1')" [class] = "hasErrorRegistration('address1') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.address1.errors">
+                  <span *ngIf="f_Registration.address1.errors.required">Address1 is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-12">
+              <label for="address2" class="form-label">Address 2</label>
+              <input type="text" class="form-control" id="address2" name="address2" formControlName="address2" placeholder="Apartment, studio, or floor">
+              <small *ngIf="hasErrorRegistration('address2')" [class] = "hasErrorRegistration('address2') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.address2.errors">
+                  <span *ngIf="f_Registration.address2.errors.required">Address2 is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-md-6">
+              <label for="city" class="form-label">City</label>
+              <input type="text" class="form-control" id="city" name="city" formControlName="city">
+              <small *ngIf="hasErrorRegistration('city')" [class] = "hasErrorRegistration('city') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.city.errors">
+                  <span *ngIf="f_Registration.city.errors.required">City is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-md-4">
+              <label for="state" class="form-label">State</label>
+              <input type="state" class="form-control" id="state" name="state" formControlName="state">
+              <small *ngIf="hasErrorRegistration('state')" [class] = "hasErrorRegistration('state') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.state.errors">
+                  <span *ngIf="f_Registration.state.errors.required">State is a required field</span>
+                </div>
+              </small>
+            </div>
+            <div class="col-md-2">
+              <label for="pincode" class="form-label">Pincode</label>
+              <input type="text" class="form-control" id="pincode" name="pincode" formControlName="pincode">
+              <small *ngIf="hasErrorRegistration('pincode')" [class] = "hasErrorRegistration('city') ? 'has-error' : ''">
+                <div *ngIf="f_Registration.pincode.errors">
+                  <span *ngIf="f_Registration.pincode.errors.required">Pincode is a required field</span>
+                </div>
+              </small>
+            </div>
+          </div>
+          <small p-2 style="color: red;" >
+            {{registerMsg.status}}
+          </small>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" [(disabled)] = "!this.signUpForm.valid" class="w-100 btn btn-dark">Register</button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>

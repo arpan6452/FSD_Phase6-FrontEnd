@@ -1,0 +1,57 @@
+<!-- <p class="p-2 h3"><i class="fas fa-cart-arrow-down"></i> Cart</p>
+
+
+<button *ngFor="let cartItemList of cartItemLists" type="button" class="list-group-item list-group-item-action">
+  <span class="p-2 float-start">{{cartItemList.medicineName}}</span>
+  <span class="p-2 float-start">&#8377; <span #price >{{cartItemList.price}}</span></span>
+
+  <div class="btn-group float-end" role="group">
+    <button type="button" class="btn btn-dark" (click)="deductQuantity(quantity, price, cartItemList)">-</button>
+    <button #quantity type="button" class="btn btn-light" disabled >{{cartItemList.quantity}}</button>
+    <button type="button" class="btn btn-dark" (click)="addQuantity(quantity, price, cartItemList)">+</button>
+  </div>
+</button>
+<div class="position-sticky mt-2 p-1 bg-dark w-100">
+  <div class="d-flex">
+      <div class="p-2 flex-grow-1 align-self-center" style="color: white;" id="totalPrice" name="totalPrice" >Total : {{totalPrice |currency:'INR':'symbol-narrow'}}</div>
+      <div class="p-2 bd-highlight align-self-center" style="color: white;">
+        <button type="submit" [(disabled)] ="isDisabled" class="btn btn-light" (click)="gotToCart()"><i class="fas fa-credit-card"></i> Payment</button>
+      </div>
+  </div> -->
+
+<div class="container row">
+    <div class="col-md-12">
+        <h1>Upload Image</h1>
+    </div>
+</div>
+<div class="container row">
+    <div class="col-md-6">
+        <input type="file" (change)="onFileChanged($event)">
+    </div>
+    <div class="col-md-6">
+        <input type="button" (click)="onUpload()" value="upload">
+    </div>
+</div>
+<hr />
+<div class="container row">
+    <div class="col-md-12">
+        <div *ngIf=message>{{message}}</div>
+    </div>
+</div>
+<div class="container row">
+    <div class="col-md-6">
+        <input type="text" class="form-control" id="name" placeholder="image name" [(ngModel)]="imageName"
+            name="name" />
+    </div>
+    <div class="col-md-6">
+        <input type="button" (click)="getImage()" value="Get Image">
+    </div>
+</div>
+<div class="container row">
+    <div class="col-md-12">
+        <div *ngIf=retrievedImage>
+          <h1>hi</h1>
+            <img [src]="retrievedImage">
+        </div>
+    </div>
+</div>

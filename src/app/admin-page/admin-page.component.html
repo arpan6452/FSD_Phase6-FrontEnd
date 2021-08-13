@@ -1,0 +1,181 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex justify-content-start">
+        <button class="me-2 btn btn-light"><i class="fas fa-user-edit p-1" data-bs-toggle="modal" data-bs-target="#updatePassword" style="cursor: pointer;"></i></button>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex justify-content-end">
+        <button class="me-2 btn btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Create Product" ><i class="fas fa-plus-square" data-bs-toggle="modal" data-bs-target="#createItemModal"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="updatePassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="updatePasswordForm" (ngSubmit)="updatePassword()">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="m-2 form-group">
+              <label for="oldpassword" class="form-label">Enter oldpassword</label>
+              <input type="text" class="form-control" aria-label="oldpassword" id="oldpassword" name="oldpassword" formControlName="oldpassword">
+            </div>
+            <div class="m-2 form-group">
+              <label for="newpassword" class="form-label">Enter newpassword</label>
+              <input type="text" class="form-control" aria-label="newpassword" id="newpassword" name="newpassword" formControlName="newpassword">
+            </div>
+            <span style="color: red;margin: 10px;" >{{errorPassword}}</span>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-dark">Update Password</button>
+            <!-- <button type="submit" class="btn btn-dark" data-bs-dismiss="modal">Close</button> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="createItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="createItemForm" enctype="multipart/form-data" (ngSubmit)="createItemSubmit()">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create Item</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="m-2 form-group">
+              <label for="medicineImage" class="form-label">Upload Medicine Image</label>
+              <input id="medicineImage" class="form-control" type="file" (change)="onFileChanged($event)">
+            </div>
+            <div class="m-2 form-group">
+              <label for="medicineName" class="form-label">Enter Medicine Name</label>
+              <div class="input-group">
+                <span class="input-group-text" style="padding-left: 14px;padding-right: 14px;"><i class="fas fa-pills"></i></span>
+                <input type="text" class="form-control" aria-label="Item Name" id="medicineName" name="medicineName" formControlName="medicineName">
+              </div>
+            </div>
+            <div class="m-2 form-group">
+              <label for="medicineBrand" class="form-label">Enter Medicine Brand Name</label>
+              <div class="input-group">
+                <span class="input-group-text" style="padding-left: 16px;padding-right: 16px;"><i class="fas fa-prescription"></i></span>
+                <input type="text" class="form-control" aria-label="Item Name" id="medicineBrand" name="medicineBrand" formControlName="medicineBrand">
+              </div>
+            </div>
+            <div class="m-2 form-group">
+              <label for="medicineQuantity" class="form-label">Enter Medicine Quantity</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-balance-scale"></i></span>
+                <input type="text" class="form-control" aria-label="Item Name" id="medicineQuantity" name="medicineQuantity" formControlName="medicineQuantity">
+              </div>
+            </div>
+            <div class="m-2 form-group">
+              <label for="price" class="form-label">Enter Medicine Price</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-money-check"></i></span>
+                <input type="text" class="form-control" aria-label="Price of item" id="price" name="price" formControlName="price">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-dark">Create</button>
+            <!-- <button type="submit" class="btn btn-dark" data-bs-dismiss="modal">Close</button> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="table-responsive">
+    <table class="mt-2 table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <!-- <th scope="col">Item Id</th> -->
+          <th scope="col">Medicine Image</th>
+          <th scope="col">Medicine Name</th>
+          <th scope="col">Medicine Brand</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items; let i = index">
+          <td scope="row">{{i + 1}}</td>
+          <th><img class="medicine-image" [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/jpg;base64, '+ item.picByte)" alt=""></th>
+          <td>{{item.medicineName}}</td>
+          <td>{{item.medicineBrand}}</td>
+          <td>{{item.medicineQuantity}}</td>
+          <td>{{item.price}}</td>
+          <td>
+            <i class="ms-2 fas fa-edit" data-bs-toggle="modal" data-bs-target="#updateItemModal" (click)="openForm(item)"></i>
+          <!-- <button class="me-2 btn btn-light curdButton" >Update</button> -->
+            <div class="modal fade" id="updateItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <form [formGroup]="updateItemForm" enctype="multipart/form-data" (ngSubmit)="updateItemSubmit(close)">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Update Item</h5>
+                      <button #close type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="m-2 form-group">
+                        <label for="medicineImage" class="form-label">Upload Medicine Image</label>
+                        <input id="medicineImage" class="form-control" type="file" (change)="onFileChanged($event)">
+                      </div>
+                      <div class="m-2 form-group">
+                        <label for="medicineName" class="form-label">Enter Medicine Name</label>
+                        <div class="input-group">
+                          <span class="input-group-text" style="padding-left: 14px;padding-right: 14px;"><i class="fas fa-pills"></i></span>
+                          <input type="text" class="form-control" aria-label="Item Name" id="medicineName" name="medicineName" formControlName="medicineName">
+                        </div>
+                      </div>
+                      <div class="m-2 form-group">
+                        <label for="medicineBrand" class="form-label">Enter Medicine Brand Name</label>
+                        <div class="input-group">
+                          <span class="input-group-text" style="padding-left: 16px;padding-right: 16px;"><i class="fas fa-prescription"></i></span>
+                          <input type="text" class="form-control" aria-label="Item Name" id="medicineBrand" name="medicineBrand" formControlName="medicineBrand">
+                        </div>
+                      </div>
+                      <div class="m-2 form-group">
+                        <label for="medicineQuantity" class="form-label">Enter Medicine Quantity</label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fas fa-balance-scale"></i></span>
+                          <input type="text" class="form-control" aria-label="Item Name" id="medicineQuantity" name="medicineQuantity" formControlName="medicineQuantity">
+                        </div>
+                      </div>
+                      <div class="m-2 form-group">
+                        <label for="price" class="form-label">Enter Medicine Price</label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fas fa-money-check"></i></span>
+                          <input type="text" class="form-control" aria-label="Price of item" id="price" name="price" formControlName="price">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-dark">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <i class="ms-2 fas fa-trash-alt" data-bs-toggle="modal" data-bs-target="#deleteItemModal" (click)="deleteItem(item)"></i>
+            <!-- <button class="ms-2 btn btn-light curdButton" >Delete</button> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>

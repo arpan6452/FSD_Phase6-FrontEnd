@@ -1,0 +1,38 @@
+.curdButton{
+  background-color: rgba(150,150,150,.5);
+  color: black;
+}
+
+th{
+  color: #3f51b5;
+}
+
+.fa-trash-alt{
+  color: #ff4081;
+  cursor: pointer;
+}
+
+.fa-edit{
+  color: #3f51b5;
+  cursor: pointer;
+}
+
+.fa-user-edit{
+  color: #3f51b5;
+  cursor: pointer;
+}
+
+.fa-plus-square{
+  color: #3f51b5;
+  cursor: pointer;
+}
+
+[type=submit]{
+  background-color: #3f51b5;
+}
+
+.medicine-image{
+  height: 60px;
+  width: 100px;
+}
+

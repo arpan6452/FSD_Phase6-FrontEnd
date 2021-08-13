@@ -1,0 +1,108 @@
+<div>
+  <div class="row custom-body-margin">
+    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+      <div>
+        <form [formGroup]="searchForm" (ngSubmit)="filterMenu()">
+          <div class="row m-2">
+            <div class="col-12  p-2 form-floating">
+              <select class="form-select" id="medicineBrand" style="cursor: pointer;" name="medicineBrand" formControlName="medicineBrand">
+                  <option selected value="">Any</option>
+                  <option *ngFor="let item of filterBrandName" value="{{item.medicineBrand}}">{{item.medicineBrand}}</option>
+              </select>
+              <label class="m-3" for="medicineBrand">Medicine Brand</label>
+              <small *ngIf="hasError('medicineBrand')" [class] = "hasError('medicineBrand') ? 'has-error' : ''">
+                <div *ngIf="f.medicineBrand.errors">
+                  <span *ngIf="f.medicineBrand.errors.required">Medicine Brand is a required field</span>
+                </div>
+              </small>
+            </div>
+
+            <div class="col-12 p-2 form-floating">
+              <select class="form-select" style="cursor: pointer;" id="medicineName" name="medicineName" formControlName="medicineName">
+                <option selected value="">Any</option>
+                <option *ngFor="let item of filterMedicineName"  value="{{item.medicineName}}">{{item.medicineName}}</option>
+              </select>
+              <label class="m-3" for="medicineName">Medicine Name</label>
+              <small *ngIf="hasError('medicineName')" [class] = "hasError('medicineName') ? 'has-error' : ''">
+                <div *ngIf="f.medicineName.errors">
+                  <span *ngIf="f.itemCourse.errors.required">Medicine Name is a required field</span>
+                </div>
+              </small>
+            </div>
+            <button type="submit" class="filter col-12 p-2 btn btn-light"><i class="fas fa-filter"></i> Filter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+      <div class="container-fluid">
+        <div *ngIf="isLoading">
+          <div class="spinner-grow text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="spinner-grow text-secondary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="spinner-grow text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="spinner-grow text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="spinner-grow text-info" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div class="row">
+          <ng-container *ngIf="items == 0;else second">
+            No products found !!
+          </ng-container>
+          <ng-template #second>
+            <div id= "card" *ngFor="let item of items" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+              <div class="mt-3">
+                <div class="card text-center" style=" box-shadow: 0px 0px 3px 1px #eee;">
+                  <img class="medicine-image" [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/jpg;base64, '+ item.picByte)" alt="">
+                  <div class="card-body">
+                    <h5 #name class="card-title">{{item.medicineName}}</h5>
+                    <p class="card-text">{{item.medicineBrand}}</p>
+                  </div>
+                  <div class="card-body row">
+                    <span class="col-6">{{item.medicineQuantity}} Qty.</span>
+                    <span class="col-6">&#8377; <span #price>{{item.price}}</span></span>
+                  </div>
+                  <div class="card-footer text-muted">
+                    <button type="button" class="addSubBtn btn btn-dark custome-background-blue" (click)="deductQuantity(quantity, price, item)"><i class="fas fa-minus"></i></button>
+                    <button #quantity type="button" class="btn btn-light" disabled >0</button>
+                    <button type="button" class="addSubBtn btn btn-dark custome-background-blue" (click)="addQuantity(quantity, price, item)"><i class="fas fa-plus"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <nav class="navbar fixed-bottom navbar-light mt-4 custome-background-blue w-100">
+    <div class="container-fluid">
+      <div class="d-flex">
+        <div class="flex-grow-1 align-self-center float-end" style="color: white;" id="totalPrice" name="totalPrice" >Total : {{totalPrice |currency:'INR':'symbol-narrow'}}</div>
+        <div class="bd-highlight align-self-center float-end" style="color: white;">
+          <button type="submit" [(disabled)] ="isDisabled" class="btn btn-light btn-submit float-end" (click)="gotToCart()"><i class="fas fa-cart-plus"></i> Go to Cart</button>
+        </div>
+    </div>
+    </div>
+  </nav> -->
+  <div class="custom-border position-sticky mt-4 custome-background-blue w-100">
+    <div class="d-flex">
+        <div class="p-2 flex-grow-1 align-self-center" style="color: white;" id="totalPrice" name="totalPrice" >Total : {{totalPrice |currency:'INR':'symbol-narrow'}}</div>
+        <div class="p-2 bd-highlight align-self-center" style="color: white;">
+          <button type="submit" [(disabled)] ="isDisabled" class="btn btn-submit" (click)="gotToCart()"><i class="fas fa-cart-plus "></i> Go to Cart</button>
+        </div>
+    </div>
+  </div>
+</div>
